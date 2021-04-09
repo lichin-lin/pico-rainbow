@@ -49,6 +49,6 @@ app.get("/", (req, res) => {
 });
 
 // server.listen(8081 || process.env.PORT, () => {
-server.listen(8081 || process.env.PORT, () => {
+server.listen(process.env.PORT || 8081, () => {
   console.log(`Started server on port ${server.address().port}`);
 });
