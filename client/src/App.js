@@ -7,7 +7,7 @@ function App() {
     // WS
     const ws =
       process.env.NODE_ENV === "production"
-        ? "wss:https://pico-rainbow.herokuapp.com"
+        ? "wss://pico-rainbow.herokuapp.com/"
         : "ws:127.0.0.1:5000";
     const wsConnection = new WebSocket(ws, "json");
     let localId;
@@ -141,7 +141,25 @@ function App() {
       const touches = e.changedTouches;
       const _x = touches[0].clientX;
       const _y = touches[0].clientY;
-      draw(_x, _y);
+      if (!lastPoint) {
+        lastPoint = { x: _x, y: _y };
+        return;
+      }
+      draw({
+        lastPoint,
+        x: _x,
+        y: _y,
+        color: hue,
+      });
+      broadcast(
+        JSON.stringify({
+          lastPoint,
+          x: _x,
+          y: _y,
+          color: hue,
+        })
+      )
+      lastPoint = { x: _x, y: _y };
     };
 
     function draw(data) {
@@ -174,14 +192,14 @@ function App() {
       }
     }
 
-    // canvas.addEventListener("touchstart", (e) => {
-    //   e.preventDefault();
-    //   const touches = e.changedTouches;
-    //   isDrawing = true;
-    //   lastX = touches[0].clientX;
-    //   lastY = touches[0].clientY;
-    // });
-    // canvas.addEventListener("touchmove", (e) => handleTouchEvent(e));
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const touches = e.changedTouches;
+      isDrawing = true;
+      // lastX = touches[0].clientX;
+      // lastY = touches[0].clientY;
+    });
+    canvas.addEventListener("touchmove", (e) => handleTouchEvent(e));
 
     canvas.addEventListener("mousedown", (e) => {
       e.preventDefault();
