@@ -6,8 +6,8 @@ function App() {
   React.useEffect(() => {
     // WS
     const ws =
-      process.env.NODE_ENV === "production"
-        ? "ws:https://pico-rainbow.herokuapp.com"
+      process.env.NODE_ENV !== "production"
+        ? "wss:https://pico-rainbow.herokuapp.com"
         : "ws:127.0.0.1:8081";
     const wsConnection = new WebSocket(ws, "json");
     let localId;
@@ -15,7 +15,7 @@ function App() {
     let peerConnections = {};
     let initiator = false;
     wsConnection.onopen = (e) => {
-      console.log(`wsConnection open to 127.0.0.1:8081`, e);
+      console.log(`wsConnection open to ${ws}`, e);
     };
     wsConnection.onerror = (e) => {
       console.error(`wsConnection error `, e);
