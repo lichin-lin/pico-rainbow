@@ -5,7 +5,11 @@ import "./App.css";
 function App() {
   React.useEffect(() => {
     // WS
-    const wsConnection = new WebSocket("ws:127.0.0.1:8081", "json");
+    const ws =
+      process.env.NODE_ENV === "production"
+        ? "ws:https://pico-rainbow.herokuapp.com"
+        : "ws:127.0.0.1:8081";
+    const wsConnection = new WebSocket(ws, "json");
     let localId;
     let peerIds;
     let peerConnections = {};
@@ -104,7 +108,8 @@ function App() {
     ctx.lineWidth = 50;
     let isDrawing = false;
     let lastPoint = { x: 0, y: 0 };
-    let hue = 100;
+    let hue = Math.random() * 200;
+    console.log(hue);
     let direction = true;
 
     const handleMouseEvent = (e) => {
@@ -118,6 +123,7 @@ function App() {
           lastPoint,
           x: e.offsetX,
           y: e.offsetY,
+          color: hue,
         });
 
         broadcast(
@@ -125,6 +131,7 @@ function App() {
             lastPoint,
             x: e.offsetX,
             y: e.offsetY,
+            color: hue,
           })
         );
         lastPoint = { x: e.offsetX, y: e.offsetY };
@@ -138,14 +145,14 @@ function App() {
     };
 
     function draw(data) {
-      const { x, y, lastX, lastY } = data;
+      const { x, y, lastX, lastY, color } = data;
       ctx.beginPath();
-      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      ctx.strokeStyle = `hsl(${color}, 100%, 50%)`;
       ctx.moveTo(lastX, lastY);
       ctx.lineTo(x, y);
       ctx.stroke();
 
-      hue++;
+      // hue++;
       // if (hue >= 100) {
       //   hue = 0;
       // }
@@ -161,9 +168,9 @@ function App() {
       }
 
       if (direction) {
-        hue++;
+        hue+= 0.5;
       } else {
-        hue--;
+        hue-= 0.5;
       }
     }
 

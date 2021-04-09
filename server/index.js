@@ -20,7 +20,7 @@ const broadcastConnections = () => {
 wss.on("connection", (ws) => {
   app.locals.connections.push(ws);
   ws._connId = `conn-${uuid.v4()}`;
-
+  console.log('Client connected');
   // send the local id for the connection
   ws.send(JSON.stringify({ type: "connection", id: ws._connId }));
 
@@ -48,6 +48,7 @@ app.get("/", (req, res) => {
   res.status(200).json("success");
 });
 
-server.listen(process.env.PORT || 8081, () => {
+// server.listen(8081 || process.env.PORT, () => {
+server.listen(8081 || process.env.PORT, () => {
   console.log(`Started server on port ${server.address().port}`);
 });
