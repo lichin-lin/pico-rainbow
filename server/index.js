@@ -4,6 +4,7 @@ const ws = require("ws");
 const uuid = require("uuid");
 
 const app = express();
+const INDEX = '/index.html';
 const PORT = process.env.PORT || 8081;
 
 app.locals.connections = [];
@@ -45,7 +46,7 @@ wss.on("connection", (ws) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(INDEX, { root: __dirname })
+  // res.sendFile(INDEX, { root: __dirname })
   console.log(`Listening on ${PORT}`)
 });
 
