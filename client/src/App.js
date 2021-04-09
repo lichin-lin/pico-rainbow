@@ -6,9 +6,9 @@ function App() {
   React.useEffect(() => {
     // WS
     const ws =
-      process.env.NODE_ENV !== "production"
+      process.env.NODE_ENV === "production"
         ? "wss:https://pico-rainbow.herokuapp.com"
-        : "ws:127.0.0.1:8081";
+        : "ws:127.0.0.1:5000";
     const wsConnection = new WebSocket(ws, "json");
     let localId;
     let peerIds;

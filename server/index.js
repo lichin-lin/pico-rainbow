@@ -4,7 +4,6 @@ const ws = require("ws");
 const uuid = require("uuid");
 
 const app = express();
-const INDEX = '/index.html';
 const PORT = process.env.PORT || 8081;
 
 app.locals.connections = [];
