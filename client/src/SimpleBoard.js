@@ -1,14 +1,12 @@
 import React from "react";
 import CanvasDraw from "react-canvas-draw";
 
-const PureCanvas = React.forwardRef((props, ref) => <canvas ref={ref} />);
-
-function Board({ currentBrushColor }) {
-  const canvasRef = React.useRef();
+function Board({ currentBrushColor, fileDataHook, canvasRef }) {
   const [boardSize, setBoardSize] = React.useState({
     width: 400,
     height: 400,
   });
+
   React.useEffect(() => {
     const handleResize = (e) => {
       setBoardSize({
@@ -20,6 +18,7 @@ function Board({ currentBrushColor }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   return (
     <CanvasDraw
       ref={canvasRef}

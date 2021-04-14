@@ -196,7 +196,7 @@ function Board () {
     }
 
     canvas.addEventListener("touchstart", (e) => {
-      e.preventDefault();
+      // e.preventDefault();
       const touches = e.changedTouches;
       isDrawing = true;
       // lastX = touches[0].clientX;
@@ -205,7 +205,7 @@ function Board () {
     canvas.addEventListener("touchmove", (e) => handleTouchEvent(e));
 
     canvas.addEventListener("mousedown", (e) => {
-      e.preventDefault();
+      // e.preventDefault();
       isDrawing = true;
       canvas.addEventListener("mousemove", handleMouseEvent);
     });
