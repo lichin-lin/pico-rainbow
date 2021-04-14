@@ -7,6 +7,8 @@ import { Catenary } from "catenary-curve";
 import ResizeObserver from "resize-observer-polyfill";
 
 import drawImage from "./drawImage";
+import { fromEvent,  } from 'rxjs'; 
+import { map, buffer, debounceTime, filter } from 'rxjs/operators';
 
 function midPointBtw(p1, p2) {
   return {
@@ -282,16 +284,26 @@ export default class extends PureComponent {
 
   handleDrawStart = (e) => {
     e.preventDefault();
-
-    // Start drawing
-    this.isPressing = true;
-
-    const { x, y } = this.getPointerPos(e);
-    if (e.touches && e.touches.length > 1) {
-      console.log('start: it a multi tab');
+    const mouse$ = fromEvent(document, 'click')
+    const buff$ = mouse$.pipe(
+      debounceTime(250),
+    )
+    const click$ = mouse$.pipe(
+      buffer(buff$),
+      map(list => {
+        return list.length;
+      }),
+      filter(x => x === 2),
+    )
+    click$.subscribe(() => {
+      console.log('doubleclick')
+      this.isPressing = false;
       this.isTwoFingerTap = true;
       return;
-    }
+    })
+    // Start drawing
+    this.isPressing = true;
+    const { x, y } = this.getPointerPos(e);
     if (e.touches && e.touches.length > 0) {
       // on touch, set catenary position to touch pos
       this.lazy.update({ x, y }, { both: true });
@@ -302,24 +314,19 @@ export default class extends PureComponent {
   };
 
   handleDrawMove = (e) => {
-    console.log('moving');
-    e.preventDefault();
-
-    const { x, y } = this.getPointerPos(e);
-    if (this.isTwoFingerTap) {
-      console.log('moving: it a multi tab');
+    if (!this.isPressing) {
       return;
     }
+    e.preventDefault();
+    const { x, y } = this.getPointerPos(e);
     this.handlePointerMove(x, y);
   };
 
   handleDrawEnd = (e) => {
-    e.preventDefault();
-    console.log('end');
-    if (this.isTwoFingerTap) {
-      this.isTwoFingerTap = false;
+    if (!this.isPressing) {
       return;
     }
+    e.preventDefault();
     // Draw to this end pos
     this.handleDrawMove(e);
 
@@ -328,7 +335,6 @@ export default class extends PureComponent {
     this.isPressing = false;
     this.saveLine();
   };
-
   handleCanvasResize = (entries, observer) => {
     const saveData = this.getSaveData();
     for (const entry of entries) {
@@ -414,6 +420,7 @@ export default class extends PureComponent {
       this.ctx.temp.canvas.height
     );
     this.ctx.temp.lineWidth = brushRadius * 2;
+    if (points.length < 2) return;
 
     let p1 = points[0];
     let p2 = points[1];
