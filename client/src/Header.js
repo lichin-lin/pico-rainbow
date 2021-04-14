@@ -1,6 +1,6 @@
 import React from "react";
 import ThemeIcon from "./ThemeIcon";
-import { GrUndo, GrRedo, GrTrash } from "react-icons/gr";
+import { GrUndo } from "react-icons/gr";
 
 function Header({ theme, handleSetTheme, canvasRef }) {
   const handleUndo = () => {
@@ -20,9 +20,9 @@ function Header({ theme, handleSetTheme, canvasRef }) {
         >
           <GrUndo size={"1.4rem"} />
         </div>
-        <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100">
+        {/* <div className="cursor-not-allowed transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black white">
           <GrRedo size={"1.4rem"} />
-        </div>
+        </div> */}
       </div>
       {/* Theme */}
       <ThemeIcon theme={theme} handleSetTheme={handleSetTheme} />

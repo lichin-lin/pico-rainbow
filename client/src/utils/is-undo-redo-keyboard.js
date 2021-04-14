@@ -9,10 +9,9 @@ const check = (ev, style, shift) => {
   if (winAllow && ev.ctrlKey && shift && !ev.metaKey && !ev.altKey) return true;
   return false;
 }
-
-export default function (ev, style) {
-  return undo(ev, style) || redo(ev, style);
-};
+// export default function (ev, style) {
+//   return undo(ev, style) || redo(ev, style);
+// };
 
 export function undo (ev, style) {
   return check(ev, style, !ev.shiftKey);

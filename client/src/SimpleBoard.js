@@ -1,5 +1,5 @@
 import React from "react";
-import CanvasDraw from "react-canvas-draw";
+import CanvasDraw from "./utils/react-canvas-draw";
 
 function Board({ currentBrushColor, fileDataHook, canvasRef }) {
   const [boardSize, setBoardSize] = React.useState({
@@ -28,6 +28,11 @@ function Board({ currentBrushColor, fileDataHook, canvasRef }) {
       gridColor={"rgba(150,150,150,0)"}
       canvasWidth={boardSize.width}
       canvasHeight={boardSize.height}
+      backgroundColor={'transparent'}
+      onChange={() => {
+        // const data = canvasRef?.current?.getSaveData()
+        // console.log(JSON.parse(data));
+      }}
     />
   );
 }

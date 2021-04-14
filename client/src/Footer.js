@@ -1,7 +1,6 @@
 import React from "react";
 import { HexColorPicker } from "react-colorful";
 import Status from "./components/Status";
-import UploadImage from "./components/UploadImage";
 import { FiTrash2 } from "react-icons/fi";
 
 function Footer({

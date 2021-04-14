@@ -25,7 +25,7 @@ function App() {
   };
   const handleRedoEvent = () => {
     // canvasRef?.current?.redo();
-    setFile('redo')
+    // setFile('redo')
   };
   React.useEffect(() => {
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -48,9 +48,8 @@ function App() {
     if (touches.length === 2) {
       handleUndoEvent();
     } else if (touches.length === 3) {
-      handleRedoEvent();
+      // handleRedoEvent();
     }
-    setFile(touches.length);
   };
   const handleKeyboard = (event) => {
     if (undo(event)) {
@@ -65,11 +64,11 @@ function App() {
     return () => {
       document.removeEventListener("touchstart", handleStart, false);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="App h-screen flex flex-col">
       {/* Header */}
-      {fileData}
       <Header
         canvasRef={canvasRef}
         theme={theme}
