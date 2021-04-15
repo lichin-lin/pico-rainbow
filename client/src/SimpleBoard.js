@@ -1,7 +1,9 @@
 import React from "react";
 import CanvasDraw from "./utils/react-canvas-draw";
 
-function Board({ currentBrushColor, fileDataHook, canvasRef }) {
+function Board({ currentBrushColor, fileDataHook, canvasRef,
+  inputRef }) {
+  const { fileData, setFile } = fileDataHook;
   const [boardSize, setBoardSize] = React.useState({
     width: 400,
     height: 400,
@@ -18,7 +20,9 @@ function Board({ currentBrushColor, fileDataHook, canvasRef }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  React.useEffect(()=> {
+    canvasRef?.current?.drawImage();
+  }, [fileData])
   return (
     <CanvasDraw
       ref={canvasRef}
@@ -30,10 +34,10 @@ function Board({ currentBrushColor, fileDataHook, canvasRef }) {
       canvasWidth={boardSize.width}
       canvasHeight={boardSize.height}
       backgroundColor={'transparent'}
-      onChange={() => {
-        // const data = canvasRef?.current?.getSaveData()
-        // console.log(JSON.parse(data));
-      }}
+      imgSrc={fileData}
+      // onChange={() => {
+      //   // const data = canvasRef?.current?.getSaveData()
+      // }}
     />
   );
 }

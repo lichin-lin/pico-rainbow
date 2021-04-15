@@ -69,7 +69,7 @@ export default class extends PureComponent {
     canvasWidth: dimensionsPropTypes,
     canvasHeight: dimensionsPropTypes,
     disabled: PropTypes.bool,
-    imgSrc: PropTypes.string,
+    imgSrc: PropTypes.any,
     saveData: PropTypes.string,
     immediateLoading: PropTypes.bool,
     hideInterface: PropTypes.bool,
@@ -197,7 +197,7 @@ export default class extends PureComponent {
 
   drawImage = () => {
     if (!this.props.imgSrc) return;
-
+    console.log(this.props.imgSrc);
     // Load the image
     this.image = new Image();
 
@@ -208,6 +208,8 @@ export default class extends PureComponent {
     this.image.onload = () =>
       drawImage({ ctx: this.ctx.grid, img: this.image });
     this.image.src = this.props.imgSrc;
+    // -------
+    // this.image.src = this.props.imgSrc;
   };
 
   undo = () => {

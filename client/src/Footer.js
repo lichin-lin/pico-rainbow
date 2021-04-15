@@ -2,13 +2,14 @@ import React from "react";
 import { HexColorPicker } from "react-colorful";
 import Status from "./components/Status";
 import { FiTrash2 } from "react-icons/fi";
-
+import UploadImage from "./components/UploadImage";
 function Footer({
   currentBrushColor,
   setCurrentBrushColor,
   fileDataHook,
   canvasRef,
   showColorPickerHook,
+  inputRef,
 }) {
   const { showColorPicker, setShowColorPicker } = showColorPickerHook;
   const toggleColorPicker = () => {
@@ -20,11 +21,22 @@ function Footer({
   const handleClear = () => {
     canvasRef?.current?.clear();
   };
+  const handleUpload = () => {
+    inputRef?.current?.click();
+  }
   return (
     <div className="relative h-16 px-4 bg-white dark:bg-gray-900 shadow-sm flex justify-between items-center z-999">
       {/* Tools */}
       <div className="flex space-x-2">
-        {/* <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100">
+        <div
+          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
+          onClick={handleClear}
+        >
+          <FiTrash2 size={"1.4rem"} />
+          <UploadImage fileDataHook={fileDataHook} inputRef={inputRef}/>
+        </div>
+        <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
+        onClick={handleUpload}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -39,7 +51,7 @@ function Footer({
               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-        </div> */}
+        </div>
         {/* <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -56,13 +68,6 @@ function Footer({
             />
           </svg>
         </div> */}
-        <div
-          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
-          onClick={handleClear}
-        >
-          <FiTrash2 size={"1.4rem"} />
-          {/* <UploadImage fileDataHook={fileDataHook} /> */}
-        </div>
       </div>
 
       {/* Color Picker */}

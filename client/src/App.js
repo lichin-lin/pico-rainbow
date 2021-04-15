@@ -10,6 +10,7 @@ function App() {
   const [showColorPicker, setShowColorPicker] = React.useState(false);
   const [fileData, setFile] = React.useState(0);
   const canvasRef = React.useRef();
+  const inputRef = React.useRef();
   const handleSetTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -55,7 +56,6 @@ function App() {
   const handleKeyboard = (event) => {
     if (event.key === "Escape") {
       // write your logic here.
-      console.log('close');
       setShowColorPicker(false);
     }
     if (undo(event)) {
@@ -86,6 +86,7 @@ function App() {
           canvasRef={canvasRef}
           currentBrushColor={currentBrushColor}
           fileDataHook={{ fileData, setFile }}
+          inputRef={inputRef}
         />
       </div>
       {/* Board */}
@@ -96,6 +97,7 @@ function App() {
         setCurrentBrushColor={setCurrentBrushColor}
         fileDataHook={{ fileData, setFile }}
         showColorPickerHook={{ showColorPicker, setShowColorPicker }}
+        inputRef={inputRef}
       />
     </div>
   );
