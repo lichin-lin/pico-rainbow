@@ -1,3 +1,4 @@
+// https://codesandbox.io/s/rx-tap-7lgis?file=/src/App.js
 /*eslint-disable */
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
@@ -7,8 +8,16 @@ import { Catenary } from "catenary-curve";
 import ResizeObserver from "resize-observer-polyfill";
 
 import drawImage from "./drawImage";
-import { fromEvent,  } from 'rxjs'; 
-import { map, buffer, debounceTime, filter } from 'rxjs/operators';
+import { fromEvent, race } from "rxjs";
+import {
+  map,
+  tap,
+  buffer,
+  debounceTime,
+  bufferCount,
+  first,
+  repeat,
+} from "rxjs/operators";
 
 function midPointBtw(p1, p2) {
   return {
@@ -100,7 +109,6 @@ export default class extends PureComponent {
     this.valuesChanged = true;
     this.isDrawing = false;
     this.isPressing = false;
-    this.isTwoFingerTap = false;
   }
 
   componentDidMount() {
@@ -142,6 +150,28 @@ export default class extends PureComponent {
         this.loadSaveData(this.props.saveData);
       }
     }, 100);
+
+    // we handle touch start event here for mobile
+    // check either it's a single tap / double tap
+    const doubleClickDuration = 150;
+    // Create a stream out of the mouse click event.
+    const leftClick$ = fromEvent(this.canvas.interface, "touchstart");
+    const debounce$ = leftClick$.pipe(debounceTime(doubleClickDuration));
+    const clickLimit$ = leftClick$.pipe(bufferCount(2));
+    const bufferGate$ = race(debounce$, clickLimit$).pipe(first(), repeat());
+
+    leftClick$
+      .pipe(
+        buffer(bufferGate$)
+      )
+      .subscribe((clicks) => {
+        if (clicks.length === 2) {
+          this.undo();
+        } else {
+          const touchEvent = clicks[0];
+          this.handleDrawStart(touchEvent);
+        }
+      });
   }
 
   componentDidUpdate(prevProps) {
@@ -284,23 +314,6 @@ export default class extends PureComponent {
 
   handleDrawStart = (e) => {
     e.preventDefault();
-    const mouse$ = fromEvent(document, 'click')
-    const buff$ = mouse$.pipe(
-      debounceTime(250),
-    )
-    const click$ = mouse$.pipe(
-      buffer(buff$),
-      map(list => {
-        return list.length;
-      }),
-      filter(x => x === 2),
-    )
-    click$.subscribe(() => {
-      console.log('doubleclick')
-      this.isPressing = false;
-      this.isTwoFingerTap = true;
-      return;
-    })
     // Start drawing
     this.isPressing = true;
     const { x, y } = this.getPointerPos(e);
@@ -314,18 +327,12 @@ export default class extends PureComponent {
   };
 
   handleDrawMove = (e) => {
-    if (!this.isPressing) {
-      return;
-    }
     e.preventDefault();
     const { x, y } = this.getPointerPos(e);
     this.handlePointerMove(x, y);
   };
 
   handleDrawEnd = (e) => {
-    if (!this.isPressing) {
-      return;
-    }
     e.preventDefault();
     // Draw to this end pos
     this.handleDrawMove(e);
@@ -575,7 +582,6 @@ export default class extends PureComponent {
     ctx.arc(brush.x, brush.y, 2, 0, Math.PI * 2, true);
     ctx.fill();
   };
-
   render() {
     return (
       <div
@@ -610,7 +616,7 @@ export default class extends PureComponent {
               onMouseMove={isInterface ? this.handleDrawMove : undefined}
               onMouseUp={isInterface ? this.handleDrawEnd : undefined}
               onMouseOut={isInterface ? this.handleDrawEnd : undefined}
-              onTouchStart={isInterface ? this.handleDrawStart : undefined}
+              // onTouchStart={isInterface ? this.handleDrawStart : undefined}
               onTouchMove={isInterface ? this.handleDrawMove : undefined}
               onTouchEnd={isInterface ? this.handleDrawEnd : undefined}
               onTouchCancel={isInterface ? this.handleDrawEnd : undefined}

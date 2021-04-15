@@ -7,6 +7,7 @@ import { undo, redo } from "./utils/is-undo-redo-keyboard";
 function App() {
   const [theme, setTheme] = React.useState("light");
   const [currentBrushColor, setCurrentBrushColor] = React.useState("#50514F");
+  const [showColorPicker, setShowColorPicker] = React.useState(false);
   const [fileData, setFile] = React.useState(0);
   const canvasRef = React.useRef();
   const handleSetTheme = () => {
@@ -52,6 +53,11 @@ function App() {
     }
   };
   const handleKeyboard = (event) => {
+    if (event.key === "Escape") {
+      // write your logic here.
+      console.log('close');
+      setShowColorPicker(false);
+    }
     if (undo(event)) {
       handleUndoEvent();
     } else if (redo(event)) {
@@ -64,7 +70,7 @@ function App() {
     return () => {
       document.removeEventListener("touchstart", handleStart, false);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="App h-screen flex flex-col">
@@ -89,6 +95,7 @@ function App() {
         currentBrushColor={currentBrushColor}
         setCurrentBrushColor={setCurrentBrushColor}
         fileDataHook={{ fileData, setFile }}
+        showColorPickerHook={{ showColorPicker, setShowColorPicker }}
       />
     </div>
   );

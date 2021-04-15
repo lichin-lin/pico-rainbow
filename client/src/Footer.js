@@ -8,8 +8,9 @@ function Footer({
   setCurrentBrushColor,
   fileDataHook,
   canvasRef,
+  showColorPickerHook,
 }) {
-  const [showColorPicker, setShowColorPicker] = React.useState(false);
+  const { showColorPicker, setShowColorPicker } = showColorPickerHook;
   const toggleColorPicker = () => {
     setShowColorPicker(!showColorPicker);
   };
@@ -18,7 +19,7 @@ function Footer({
   };
   const handleClear = () => {
     canvasRef?.current?.clear();
-  }
+  };
   return (
     <div className="relative h-16 px-4 bg-white dark:bg-gray-900 shadow-sm flex justify-between items-center z-999">
       {/* Tools */}
@@ -55,7 +56,10 @@ function Footer({
             />
           </svg>
         </div> */}
-        <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100" onClick={handleClear}>
+        <div
+          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
+          onClick={handleClear}
+        >
           <FiTrash2 size={"1.4rem"} />
           {/* <UploadImage fileDataHook={fileDataHook} /> */}
         </div>

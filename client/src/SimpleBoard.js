@@ -25,6 +25,7 @@ function Board({ currentBrushColor, fileDataHook, canvasRef }) {
       lazyRadius={0}
       brushColor={currentBrushColor}
       hideGrid={true}
+      brushRadius={8}
       gridColor={"rgba(150,150,150,0)"}
       canvasWidth={boardSize.width}
       canvasHeight={boardSize.height}
