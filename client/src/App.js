@@ -15,11 +15,9 @@ function App() {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     if (newTheme === "light") {
-      // Whenever the user explicitly chooses light mode
       localStorage.theme = "light";
       return;
     }
-    // Whenever the user explicitly chooses dark mode
     localStorage.theme = "dark";
   };
   const handleUndoEvent = () => {
@@ -44,19 +42,15 @@ function App() {
   React.useEffect(() => {
     setTheme(localStorage.theme);
   }, []);
-  const handleStart = (evt) => {
-    evt.preventDefault();
-    const touches = evt.changedTouches;
-    if (touches.length === 2) {
-      handleUndoEvent();
-    } else if (touches.length === 3) {
-      // handleRedoEvent();
-    }
-  };
   const handleKeyboard = (event) => {
     if (event.key === "Escape") {
-      // write your logic here.
       setShowColorPicker(false);
+    }
+    if (event.key === "c") {
+      setShowColorPicker(!showColorPicker);
+    }
+    if (event.key === "t") {
+      handleSetTheme();
     }
     if (undo(event)) {
       handleUndoEvent();
@@ -65,13 +59,12 @@ function App() {
     }
   };
   React.useEffect(() => {
-    document.addEventListener("touchstart", handleStart, false);
     document.addEventListener("keydown", handleKeyboard);
     return () => {
-      document.removeEventListener("touchstart", handleStart, false);
+      document.removeEventListener("keydown", handleKeyboard);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [theme, showColorPicker]);
   return (
     <div className="App h-screen flex flex-col">
       {/* Header */}

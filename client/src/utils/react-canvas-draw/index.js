@@ -160,18 +160,14 @@ export default class extends PureComponent {
     const clickLimit$ = leftClick$.pipe(bufferCount(2));
     const bufferGate$ = race(debounce$, clickLimit$).pipe(first(), repeat());
 
-    leftClick$
-      .pipe(
-        buffer(bufferGate$)
-      )
-      .subscribe((clicks) => {
-        if (clicks.length === 2) {
-          this.undo();
-        } else {
-          const touchEvent = clicks[0];
-          this.handleDrawStart(touchEvent);
-        }
-      });
+    leftClick$.pipe(buffer(bufferGate$)).subscribe((clicks) => {
+      if (clicks.length === 2) {
+        this.undo();
+      } else {
+        const touchEvent = clicks[0];
+        this.handleDrawStart(touchEvent);
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -194,10 +190,12 @@ export default class extends PureComponent {
   componentWillUnmount = () => {
     this.canvasObserver.unobserve(this.canvasContainer);
   };
-
+  removeImage = () => {
+    this.ctx.grid.clearRect(0, 0, this.canvas.grid.width, this.canvas.grid.height)
+    this.image = null;
+  };
   drawImage = () => {
     if (!this.props.imgSrc) return;
-    console.log(this.props.imgSrc);
     // Load the image
     this.image = new Image();
 
@@ -205,11 +203,10 @@ export default class extends PureComponent {
     this.image.crossOrigin = "anonymous";
 
     // Draw the image once loaded
-    this.image.onload = () =>
+    this.image.onload = () => {
       drawImage({ ctx: this.ctx.grid, img: this.image });
+    };
     this.image.src = this.props.imgSrc;
-    // -------
-    // this.image.src = this.props.imgSrc;
   };
 
   undo = () => {

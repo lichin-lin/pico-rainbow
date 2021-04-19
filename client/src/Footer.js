@@ -12,6 +12,7 @@ function Footer({
   inputRef,
 }) {
   const { showColorPicker, setShowColorPicker } = showColorPickerHook;
+  const { fileData, setFile } = fileDataHook;
   const toggleColorPicker = () => {
     setShowColorPicker(!showColorPicker);
   };
@@ -20,6 +21,7 @@ function Footer({
   };
   const handleClear = () => {
     canvasRef?.current?.clear();
+    canvasRef?.current?.removeImage();
   };
   const handleUpload = () => {
     inputRef?.current?.click();

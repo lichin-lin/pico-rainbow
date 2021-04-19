@@ -57,7 +57,9 @@ export default function drawImageProp({
   if (cy < 0) cy = 0;
   if (cw > iw) cw = iw;
   if (ch > ih) ch = ih;
-
+  ctx.mozImageSmoothingEnabled = true; //false;
+  ctx.imageSmoothingEnabled = true; //false;
+  ctx.webkitImageSmoothingEnabled = true; //false;
   // fill image in dest. rectangle
   ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
 }
