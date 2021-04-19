@@ -1,3 +1,4 @@
+"use strict";
 import React from "react";
 import { HexColorPicker } from "react-colorful";
 import Status from "./components/Status";
@@ -25,20 +26,65 @@ function Footer({
   };
   const handleUpload = () => {
     inputRef?.current?.click();
-  }
+  };
+  const handleDownload = () => {
+    const { blob, dataUri } = combineDrawing(canvasRef);
+    saveImage(blob, `canvas-${new Date() / 1}.png`);
+  };
+  const combineDrawing = (canvasRef) => {
+    const width = canvasRef.current.props.canvasWidth;
+    const height = canvasRef.current.props.canvasHeight;
+    const background = canvasRef.current.canvasContainer.children[3];
+    const drawing = canvasRef.current.canvasContainer.children[1];
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    // composite now
+    canvas.getContext("2d").drawImage(background, 0, 0);
+    canvas.getContext("2d").globalAlpha = 1.0;
+    canvas.getContext("2d").drawImage(drawing, 0, 0);
+
+    const dataUri = canvas.toDataURL("image/jpeg", 1.0);
+    const data = dataUri.split(",")[1];
+    const mimeType = dataUri.split(";")[0].slice(5);
+
+    const bytes = window.atob(data);
+    const buf = new ArrayBuffer(bytes.length);
+    const arr = new Uint8Array(buf);
+
+    for (let i = 0; i < bytes.length; i++) {
+      arr[i] = bytes.charCodeAt(i);
+    }
+
+    const blob = new Blob([arr], { type: mimeType });
+    return { blob: blob, dataUri: dataUri };
+  };
+  const saveImage = (blob, filename) => {
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
   return (
     <div className="relative h-16 px-4 bg-white dark:bg-gray-900 shadow-sm flex justify-between items-center z-999">
       {/* Tools */}
       <div className="flex space-x-2">
         <div
           className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
-          onClick={handleClear}
         >
-          <FiTrash2 size={"1.4rem"} />
-          <UploadImage fileDataHook={fileDataHook} inputRef={inputRef}/>
+          <FiTrash2 size={"1.4rem"} onClick={handleClear}/>
+          <UploadImage fileDataHook={fileDataHook} inputRef={inputRef} />
         </div>
-        <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
-        onClick={handleUpload}>
+        <div
+          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
+          onClick={handleUpload}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -54,7 +100,10 @@ function Footer({
             />
           </svg>
         </div>
-        {/* <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100">
+        <div
+          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
+          onClick={handleDownload}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -69,7 +118,7 @@ function Footer({
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-        </div> */}
+        </div>
       </div>
 
       {/* Color Picker */}

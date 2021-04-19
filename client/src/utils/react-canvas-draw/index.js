@@ -191,7 +191,12 @@ export default class extends PureComponent {
     this.canvasObserver.unobserve(this.canvasContainer);
   };
   removeImage = () => {
-    this.ctx.grid.clearRect(0, 0, this.canvas.grid.width, this.canvas.grid.height)
+    this.ctx.grid.clearRect(
+      0,
+      0,
+      this.canvas.grid.width,
+      this.canvas.grid.height
+    );
     this.image = null;
   };
   drawImage = () => {
@@ -215,7 +220,6 @@ export default class extends PureComponent {
     this.simulateDrawingLines({ lines, immediate: true });
     this.triggerOnChange();
   };
-
   getSaveData = () => {
     // Construct and return the stringified saveData object
     return JSON.stringify({
