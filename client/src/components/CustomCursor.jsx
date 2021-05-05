@@ -33,7 +33,6 @@ export const CustomCursor = ({ id, x, y } = { id: '0', x: 0, y: 0 }) => {
   useEffect(() => {
     posY.set(y - CURSOR_SIZE / 2 * 2 - 8);
   }, [y, posY]);
-
   return (
     <motion.div
       style={{
@@ -61,8 +60,8 @@ export const CustomCursor = ({ id, x, y } = { id: '0', x: 0, y: 0 }) => {
       <svg
         style={{
           position: 'absolute',
-          bottom: -4,
-          left: -4
+          bottom: -2,
+          left: -2
         }}
         width="12"
         height="12"

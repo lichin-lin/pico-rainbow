@@ -1,10 +1,15 @@
 import React from "react";
 import CanvasDraw from "./utils/react-canvas-draw";
 
-function Board({ currentBrushColor, fileDataHook, canvasRef,
-  inputRef, FBInstance }) {
+function Board({
+  currentBrushColor,
+  fileDataHook,
+  canvasRef,
+  inputRef,
+  FBInstance,
+}) {
   const { fileData, setFile } = fileDataHook;
-  const [documentData, setDocumentData] = React.useState('');
+  const [documentData, setDocumentData] = React.useState("");
   const [boardSize, setBoardSize] = React.useState({
     width: 400,
     height: 400,
@@ -21,26 +26,26 @@ function Board({ currentBrushColor, fileDataHook, canvasRef,
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  React.useEffect(()=> {
+  React.useEffect(() => {
     canvasRef?.current?.drawImage();
-  }, [fileData])
-  React.useEffect(()=> {
+  }, [fileData]);
+  React.useEffect(() => {
     const handleDoc = (event, posData) => {
       switch (event) {
-        case 'change':
-          console.log(posData || '');
-          setDocumentData(posData || '');
+        case "change":
+          console.log(posData || "{ lines: [] }");
+          setDocumentData(posData || "{ lines: [] }");
           canvasRef?.current?.loadSaveData(posData, true);
           break;
         default:
           break;
       }
-    }
+    };
     FBInstance?.monitorDocument(handleDoc);
     return () => {
       FBInstance?.disconnect();
     };
-  }, [FBInstance])
+  }, [FBInstance]);
   return (
     <CanvasDraw
       ref={canvasRef}
@@ -51,7 +56,7 @@ function Board({ currentBrushColor, fileDataHook, canvasRef,
       gridColor={"rgba(150,150,150,0)"}
       canvasWidth={boardSize.width}
       canvasHeight={boardSize.height}
-      backgroundColor={'transparent'}
+      backgroundColor={"transparent"}
       imgSrc={fileData}
       FBInstance={FBInstance}
       // onChange={() => {

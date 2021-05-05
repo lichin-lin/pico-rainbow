@@ -1,8 +1,9 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import Board from "./SimpleBoard";
+import useWindowSize from "./hooks/useWindowSize";
 import CustomCursor from "./components/CustomCursor";
 import { throttle } from "./utils";
 import { getFirebaseInstance } from "./firebase/index.js";
@@ -12,8 +13,10 @@ function App() {
   // global
   const [theme, setTheme] = React.useState("light");
   const [instance, setInstance] = React.useState(null);
+  const [RoomID, setRoomID] = React.useState(null);
+  const windowSize = useWindowSize();
   let location = useLocation();
-
+  let history = useHistory();
   // cursor
   const [visible, setVisible] = React.useState(false);
   const [tempID] = React.useState(Math.random().toString(36).substring(7));
@@ -82,25 +85,26 @@ function App() {
   const onMouseMove = (e) => {
     const x = e.clientX;
     const y = e.clientY;
-    handleMovingEvent(x, y)
+    handleMovingEvent(x, y);
   };
   const onTouchMove = (e) => {
     var touch = e?.touches[0] || e?.changedTouches[0];
     const x = touch.pageX;
     const y = touch.pageY;
-    handleMovingEvent(x, y)
+    handleMovingEvent(x, y);
   };
   const handleMovingEvent = (x, y) => {
-    if (y < 40) {
-      setVisible(false);
-      return;
-    }
     if (!visible) {
       setVisible(true);
     }
+    // out side the boundary
+    if (y < 40 || y > windowSize.height - 64 || x < 0 || x > windowSize.width) {
+      setVisible(false);
+      return;
+    }
     throttlePositionChange({ x, y });
     setPos({ x, y });
-  }
+  };
   React.useEffect(() => {
     document.addEventListener("keydown", handleKeyboard);
     return () => {
@@ -142,11 +146,34 @@ function App() {
   }, [instance]);
 
   React.useEffect(() => {
-    const _ = new URLSearchParams(location.search)
-    setInstance(getFirebaseInstance && getFirebaseInstance(_.get('room') || 'test'));
+    const _ = new URLSearchParams(location.search);
+    const _roomID = _.get("room") || "lobby"
+    setInstance(
+      getFirebaseInstance && getFirebaseInstance(_roomID)
+    );
+    setRoomID(_roomID)
+    // setInstance(null);
   }, [location]);
+  React.useEffect(() => {
+    const _ = new URLSearchParams(location.search);
+    const _roomID = _.get("room") || "lobby"
+    changeRoom(_roomID)
+  }, []);
+  const changeRoom = (name) => {
+    history.push({
+      pathname: '/',
+      search: `?room=${name || 'lobby'}`
+    })
+  }
   return (
-    <div className="App h-screen flex flex-col">
+    <div
+      onMouseMove={onMouseMove}
+      onTouchMove={onTouchMove}
+      style={{
+        cursor: visible ? "none" : "default",
+      }}
+      className="App h-screen flex flex-col"
+    >
       {/* Cursor */}
       {Object.values(cursors).map((cursor) => (
         <CustomCursor
@@ -168,20 +195,11 @@ function App() {
         canvasRef={canvasRef}
         theme={theme}
         handleSetTheme={handleSetTheme}
+        changeRoom={changeRoom}
+        RoomID={RoomID}
       />
       {/* Board Container */}
-      <div
-        onMouseMove={onMouseMove}
-        onTouchMove={onTouchMove}
-        onMouseLeave={() => setVisible(false)}
-        onMouseEnter={() => setVisible(true)}
-        onTouchStart={() => setVisible(true)}
-        onTouchEnd={() => setVisible(false)}
-        style={{
-          cursor: "none",
-        }}
-        className="relative flex-1 bg-blue-50 dark:bg-gray-800 shadow-sm flex items-center"
-      >
+      <div className="relative flex-1 bg-blue-50 dark:bg-gray-800 shadow-sm flex items-center">
         <Board
           canvasRef={canvasRef}
           currentBrushColor={currentBrushColor}

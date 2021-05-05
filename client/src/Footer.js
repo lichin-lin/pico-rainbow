@@ -2,6 +2,7 @@ import React from "react";
 import { HexColorPicker } from "react-colorful";
 import Status from "./components/Status";
 import { FiTrash2 } from "react-icons/fi";
+import { GrUndo } from "react-icons/gr";
 // import UploadImage from "./components/UploadImage";
 function Footer({
   currentBrushColor,
@@ -70,14 +71,15 @@ function Footer({
     a.click();
     window.URL.revokeObjectURL(url);
   };
+  const handleUndo = () => {
+    canvasRef?.current?.undo();
+  };
   return (
     <div className="relative h-16 px-4 bg-white dark:bg-gray-900 shadow-sm flex justify-between items-center z-999">
       {/* Tools */}
       <div className="flex space-x-2">
-        <div
-          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
-        >
-          <FiTrash2 size={"1.4rem"} onClick={handleClear}/>
+        <div className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100">
+          <FiTrash2 size={"1.4rem"} onClick={handleClear} />
         </div>
         {/* <div
           className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
@@ -99,6 +101,12 @@ function Footer({
             />
           </svg>
         </div> */}
+        <div
+          className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
+          onClick={handleUndo}
+        >
+          <GrUndo size={"1.4rem"} />
+        </div>
         <div
           className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
           onClick={handleDownload}
