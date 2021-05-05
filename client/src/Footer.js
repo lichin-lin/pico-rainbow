@@ -1,9 +1,8 @@
-"use strict";
 import React from "react";
 import { HexColorPicker } from "react-colorful";
 import Status from "./components/Status";
 import { FiTrash2 } from "react-icons/fi";
-import UploadImage from "./components/UploadImage";
+// import UploadImage from "./components/UploadImage";
 function Footer({
   currentBrushColor,
   setCurrentBrushColor,
@@ -13,7 +12,7 @@ function Footer({
   inputRef,
 }) {
   const { showColorPicker, setShowColorPicker } = showColorPickerHook;
-  const { fileData, setFile } = fileDataHook;
+  // const { fileData, setFile } = fileDataHook;
   const toggleColorPicker = () => {
     setShowColorPicker(!showColorPicker);
   };

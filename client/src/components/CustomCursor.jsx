@@ -28,11 +28,11 @@ export const CustomCursor = ({ id, x, y } = { id: '0', x: 0, y: 0 }) => {
 
   useEffect(() => {
     posX.set(x - 0 * CURSOR_SIZE / 2 + 8);
-  }, [x]);
+  }, [x, posX]);
 
   useEffect(() => {
     posY.set(y - CURSOR_SIZE / 2 * 2 - 8);
-  }, [y]);
+  }, [y, posY]);
 
   return (
     <motion.div

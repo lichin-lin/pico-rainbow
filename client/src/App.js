@@ -16,9 +16,7 @@ function App() {
 
   // cursor
   const [visible, setVisible] = React.useState(false);
-  const [tempID, setTempID] = React.useState(
-    Math.random().toString(36).substring(7)
-  );
+  const [tempID] = React.useState(Math.random().toString(36).substring(7));
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const [cursors, setCursors] = React.useState({});
 
@@ -44,6 +42,7 @@ function App() {
     // canvasRef?.current?.redo();
     // setFile('redo')
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const throttlePositionChange = React.useCallback(
     throttle(instance?.onCursorPositionChanged, 20),
     [instance]
@@ -81,19 +80,27 @@ function App() {
     }
   };
   const onMouseMove = (e) => {
-    if (e.clientY < 40) {
+    const x = e.clientX;
+    const y = e.clientY;
+    handleMovingEvent(x, y)
+  };
+  const onTouchMove = (e) => {
+    var touch = e?.touches[0] || e?.changedTouches[0];
+    const x = touch.pageX;
+    const y = touch.pageY;
+    handleMovingEvent(x, y)
+  };
+  const handleMovingEvent = (x, y) => {
+    if (y < 40) {
       setVisible(false);
       return;
     }
     if (!visible) {
       setVisible(true);
     }
-    throttlePositionChange({ x: e.clientX, y: e.clientY });
-    setPos({
-      x: e.clientX,
-      y: e.clientY,
-    });
-  };
+    throttlePositionChange({ x, y });
+    setPos({ x, y });
+  }
   React.useEffect(() => {
     document.addEventListener("keydown", handleKeyboard);
     return () => {
@@ -151,7 +158,7 @@ function App() {
       ))}
       {visible && (
         <CustomCursor
-          id={instance.currentUserId || tempID}
+          id={instance?.currentUserId || tempID}
           x={pos.x}
           y={pos.y}
         />
@@ -165,8 +172,11 @@ function App() {
       {/* Board Container */}
       <div
         onMouseMove={onMouseMove}
+        onTouchMove={onTouchMove}
         onMouseLeave={() => setVisible(false)}
         onMouseEnter={() => setVisible(true)}
+        onTouchStart={() => setVisible(true)}
+        onTouchEnd={() => setVisible(false)}
         style={{
           cursor: "none",
         }}
