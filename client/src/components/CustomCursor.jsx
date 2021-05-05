@@ -47,10 +47,10 @@ export const CustomCursor = ({ id, x, y } = { id: '0', x: 0, y: 0 }) => {
         position: 'absolute',
         fontSize: FONT_SIZE,
         userSelect: 'none',
-        // background: getFruit(id).color.dim,
         boxShadow: `inset 0px 0px 0px 2px ${
           getFruit(id).color.default
         }, 0px 2px 8px rgba(0,0,0,0.2)`,
+        backgroundColor: getFruit(id).color.dim,
         borderRadius: '50%',
         display: 'flex',
         justifyContent: 'center',

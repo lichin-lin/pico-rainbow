@@ -79,12 +79,12 @@ function Footer({
           className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
         >
           <FiTrash2 size={"1.4rem"} onClick={handleClear}/>
-          <UploadImage fileDataHook={fileDataHook} inputRef={inputRef} />
         </div>
-        <div
+        {/* <div
           className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
           onClick={handleUpload}
         >
+          <UploadImage fileDataHook={fileDataHook} inputRef={inputRef} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -99,7 +99,7 @@ function Footer({
               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-        </div>
+        </div> */}
         <div
           className="cursor-pointer transition rounded-md p-1 dark:text-gray-100 dark:hover:bg-black hover:bg-gray-100"
           onClick={handleDownload}

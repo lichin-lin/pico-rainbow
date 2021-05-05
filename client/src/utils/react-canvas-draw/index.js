@@ -6,6 +6,7 @@ import { LazyBrush } from "lazy-brush";
 import { Catenary } from "catenary-curve";
 
 import ResizeObserver from "resize-observer-polyfill";
+import { getFirebaseInstance } from "../../firebase/index.js";
 
 import drawImage from "./drawImage";
 import { fromEvent, race } from "rxjs";
@@ -73,6 +74,7 @@ export default class extends PureComponent {
     saveData: PropTypes.string,
     immediateLoading: PropTypes.bool,
     hideInterface: PropTypes.bool,
+    FBInstance: PropTypes.any,
   };
 
   static defaultProps = {
@@ -92,6 +94,7 @@ export default class extends PureComponent {
     saveData: "",
     immediateLoading: false,
     hideInterface: false,
+    FBInstance: null,
   };
 
   constructor(props) {
@@ -344,6 +347,9 @@ export default class extends PureComponent {
     this.isDrawing = false;
     this.isPressing = false;
     this.saveLine();
+
+    // cb
+    this.props.FBInstance?.onDocumentChanged(this.getSaveData());
   };
   handleCanvasResize = (entries, observer) => {
     const saveData = this.getSaveData();
