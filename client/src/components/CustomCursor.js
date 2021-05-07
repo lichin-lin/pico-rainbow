@@ -36,6 +36,7 @@ export const CustomCursor = ({ id, x, y } = { id: '0', x: 0, y: 0 }) => {
   return (
     <motion.div
       style={{
+        pointerEvents: "none",
         y: posY,
         x: posX,
         top: 0,

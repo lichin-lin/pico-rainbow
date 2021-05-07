@@ -152,7 +152,7 @@ function App() {
       getFirebaseInstance && getFirebaseInstance(_roomID)
     );
     setRoomID(_roomID)
-    // setInstance(null);
+    setInstance(null);
   }, [location]);
   React.useEffect(() => {
     const _ = new URLSearchParams(location.search);
@@ -199,7 +199,7 @@ function App() {
         RoomID={RoomID}
       />
       {/* Board Container */}
-      <div className="relative flex-1 bg-blue-50 dark:bg-gray-800 shadow-sm flex items-center">
+      <div className="relative flex flex-1 items-center justify-center bg-blue-50 dark:bg-gray-800 shadow-sm">
         <Board
           canvasRef={canvasRef}
           currentBrushColor={currentBrushColor}

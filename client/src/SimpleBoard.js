@@ -10,17 +10,27 @@ function Board({
 }) {
   const { fileData, setFile } = fileDataHook;
   const [documentData, setDocumentData] = React.useState("");
-  const [boardSize, setBoardSize] = React.useState({
-    width: 400,
-    height: 400,
+  const [boardRaio, setBoardRatio] = React.useState(1);
+  const DEFAULT_BOARD_SIZE = 800;
+  const [boardWrapperSize, setBoardWrapperSize] = React.useState({
+    width: DEFAULT_BOARD_SIZE,
+    height: DEFAULT_BOARD_SIZE,
   });
-
   React.useEffect(() => {
+    // now always 400 x 400
     const handleResize = (e) => {
-      setBoardSize({
-        width: window.innerWidth - 0,
-        height: window.innerHeight - 48 * 2 - 2,
+      const screenWidth = document.documentElement.clientWidth - 2;
+      const screenHeight = document.documentElement.clientHeight - 48 * 2 - 2;
+
+      const boardWidth = Math.min(DEFAULT_BOARD_SIZE, screenWidth);
+      const boardHeight = Math.min(DEFAULT_BOARD_SIZE, screenHeight);
+      const newBoardWrapperSize = Math.min(boardWidth, boardHeight) * 0.9;
+      console.log(newBoardWrapperSize, DEFAULT_BOARD_SIZE);
+      setBoardWrapperSize({
+        width: newBoardWrapperSize,
+        height: newBoardWrapperSize,
       });
+      setBoardRatio(newBoardWrapperSize / DEFAULT_BOARD_SIZE);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -46,23 +56,32 @@ function Board({
       FBInstance?.disconnect();
     };
   }, [FBInstance]);
+
   return (
-    <CanvasDraw
-      ref={canvasRef}
-      lazyRadius={0}
-      brushColor={currentBrushColor}
-      hideGrid={true}
-      brushRadius={8}
-      gridColor={"rgba(150,150,150,0)"}
-      canvasWidth={boardSize.width}
-      canvasHeight={boardSize.height}
-      backgroundColor={"transparent"}
-      imgSrc={fileData}
-      FBInstance={FBInstance}
-      // onChange={() => {
-      //   // const data = canvasRef?.current?.getSaveData()
-      // }}
-    />
+    <div
+      className="border-gray-300 border dark:border-gray-600 flex items-center justify-center"
+      style={{
+        width: boardWrapperSize.width,
+        height: boardWrapperSize.height,
+      }}
+    >
+      <CanvasDraw
+        ref={canvasRef}
+        lazyRadius={0}
+        brushColor={currentBrushColor}
+        hideGrid={true}
+        brushRadius={4}
+        gridColor={"rgba(150,150,150,0)"}
+        canvasWidth={boardWrapperSize.width}
+        canvasHeight={boardWrapperSize.height}
+        backgroundColor={"transparent"}
+        imgSrc={fileData}
+        FBInstance={FBInstance}
+        // onChange={() => {
+        //   // const data = canvasRef?.current?.getSaveData()
+        // }}
+      />
+    </div>
   );
 }
 
