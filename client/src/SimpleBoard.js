@@ -43,7 +43,7 @@ function Board({
     const handleDoc = (event, posData) => {
       switch (event) {
         case "change":
-          console.log(posData || "{ lines: [] }");
+          // console.log(posData || "{ lines: [] }");
           setDocumentData(posData || "{ lines: [] }");
           canvasRef?.current?.loadSaveData(posData, true);
           break;
@@ -65,7 +65,7 @@ function Board({
         height: boardWrapperSize.height,
       }}
     >
-      <CanvasDraw
+      {/* <CanvasDraw
         ref={canvasRef}
         lazyRadius={0}
         brushColor={currentBrushColor}
@@ -80,7 +80,7 @@ function Board({
         // onChange={() => {
         //   // const data = canvasRef?.current?.getSaveData()
         // }}
-      />
+      /> */}
     </div>
   );
 }

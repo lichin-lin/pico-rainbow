@@ -152,14 +152,13 @@ function App() {
       getFirebaseInstance && getFirebaseInstance(_roomID)
     );
     setRoomID(_roomID)
-    setInstance(null);
   }, [location]);
-  React.useEffect(() => {
-    const _ = new URLSearchParams(location.search);
-    const _roomID = _.get("room") || "lobby"
-    changeRoom(_roomID)
-  }, []);
+
   const changeRoom = (name) => {
+    // TODO: how to leave a room?
+    instance?.leaveRoom()
+    setInstance(null)
+    setCursors({})
     history.push({
       pathname: '/',
       search: `?room=${name || 'lobby'}`

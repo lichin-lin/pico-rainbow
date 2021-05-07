@@ -27,7 +27,7 @@ class Firebase {
   }
 
   onCursorPositionChanged = ({ x, y }) => {
-    console.log("send position: ", this.currentUserId);
+    // console.log("send position: ", this.currentUserId);
     if (!this.currentUserId) {
       return;
     }
@@ -89,13 +89,14 @@ class Firebase {
     this.roomRef.child("document").on("value", (snap) => {
       cb("change", snap.val());
     });
-  }
+  };
   onDocumentChanged = (document) => {
     // console.log("send doc: ", document);
     this.roomRef.child(`document`).set(document);
-    this.roomRef.child(`users/${this.currentUserId}`).onDisconnect().remove();
   };
-
+  leaveRoom = () => {
+    this.roomRef.child(`users/${this.currentUserId}`).remove();
+  };
   disconnect = () => {
     this.roomRef.off();
   };
